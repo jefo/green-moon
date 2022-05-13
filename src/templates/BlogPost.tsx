@@ -1,49 +1,39 @@
 import * as React from "react"
 import { Link, graphql } from "gatsby"
+import { MDXRenderer } from "gatsby-plugin-mdx"
 
-import Bio from "../components/bio"
-import Layout from "../components/layout"
-import Seo from "../components/seo"
+import Layout from "../components/Layout"
+import { Seo } from "../components/common"
+import { PageProps } from "@/definitions"
 
-const BlogPostTemplate = ({ data, location }) => {
-  const post = data.markdownRemark
+const BlogPostTemplate: React.FC<PageProps> = ({ data, location }) => {
+  const post = data.mdx
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const { previous, next } = data
-
   return (
     <Layout location={location} title={siteTitle}>
       <Seo
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}
       />
-      <article
-        className="blog-post"
-        itemScope
-        itemType="http://schema.org/Article"
-      >
-        <header>
-          <h1 itemProp="headline">{post.frontmatter.title}</h1>
-          <p>{post.frontmatter.date}</p>
+      <article itemScope itemType="http://schema.org/Article">
+        <header className="grid grid-cols-blog">
+          <h1
+            className="col-start-2 font-exo font-black text-skin-fg text-4xl md:text-6xl"
+            itemProp="headline"
+          >
+            {post.frontmatter.title}
+          </h1>
+          <p className="col-start-2 font-yrsa text-skin-fg text-xl">
+            {post.frontmatter.date}
+          </p>
         </header>
-        <section
-          dangerouslySetInnerHTML={{ __html: post.html }}
-          itemProp="articleBody"
-        />
-        <hr />
-        <footer>
-          <Bio />
-        </footer>
+        <section itemProp="articleBody" className="prose prose-xl mt-8 mx-auto">
+          <MDXRenderer>{post.body}</MDXRenderer>
+        </section>
       </article>
-      <nav className="blog-post-nav">
-        <ul
-          style={{
-            display: `flex`,
-            flexWrap: `wrap`,
-            justifyContent: `space-between`,
-            listStyle: `none`,
-            padding: 0,
-          }}
-        >
+      <nav className="mt-8 grid grid-cols-blog">
+        <ul className="col-start-2 text-lg flex flex-wrap justify-between">
           <li>
             {previous && (
               <Link to={previous.fields.slug} rel="prev">
@@ -77,17 +67,17 @@ export const pageQuery = graphql`
         title
       }
     }
-    markdownRemark(id: { eq: $id }) {
+    mdx(id: { eq: $id }) {
       id
       excerpt(pruneLength: 160)
-      html
+      body
       frontmatter {
         title
         date(formatString: "MMMM DD, YYYY")
         description
       }
     }
-    previous: markdownRemark(id: { eq: $previousPostId }) {
+    previous: mdx(id: { eq: $previousPostId }) {
       fields {
         slug
       }
@@ -95,7 +85,7 @@ export const pageQuery = graphql`
         title
       }
     }
-    next: markdownRemark(id: { eq: $nextPostId }) {
+    next: mdx(id: { eq: $nextPostId }) {
       fields {
         slug
       }
