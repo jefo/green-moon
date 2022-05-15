@@ -1,47 +1,47 @@
 ---
 title: Becktest QQE+HULL Strategy v. 1.0.0
-date: "2022-04-22T22:12:03.284Z"
+date: "2022-05-15T22:12:03.284Z"
 description: "QQE+HULL strategy backtest on different pairs"
 ---
 
 This is my first post on my new blog! How exciting!
 
 I am glad to present you the first strategy that I recently tested.
-I found this strategy at TradeIQ channel.
-[embed video https://www.youtube.com/watch?v=wwmv6TU7dzU]
+I found <a target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/watch?v=wwmv6TU7dzU">this strategy&nbsp;</a> at TradeIQ channel.
 
-Первые результаты были не очень впечатляющими, но после оптимизации стали выглядеть неплохо.
+By the results of 100 tests the author's strategy showed winrate 69% 🤩 and PnL 310% 🤑. 
 
-(вставить картинку с финальными резульяттами)
+It looks impressive. Let's check how this strategy will work on BTCUSDT pair.
 
-Но обо всем по порядку.
-
-## Indicators
+## Indicators.
 * [QQE MOD](https://www.tradingview.com/script/TpUW4muw-QQE-MOD/)
 First confirmation indicator.
+
+![ADD_QQE_MOD](./addqqe.gif)
 
 * [HULL SUITE](https://www.tradingview.com/v/hg92pFwS/)
 Second confirmation indicator.
 
-* [Volume Oscilator]
+![ADD_HULL](./addhull.gif)
+
+* [Volume Oscilator](https://www.tradingview.com/support/solutions/43000591350-volume-oscillator/)
 Volume indicator to confirm volume increase.
 
-* [ATR Bands](https://ru.tradingview.com/script/ziTzsSfo-ATR-Bands/)
-Используется для определения уровня Stop Loss
+* <a target="_blank" rel="noopener noreferrer" href="https://ru.tradingview.com/script/ziTzsSfo-ATR-Bands/">ATR Bands&nbsp;</a> Used for determining Stop Loss level
 
-## Настройки индикаторов
+## Indicator settings
 * HULL SUITE
-Меняем Length на 60
+Change Length to 60
 
-Остальное оставляем как есть.
+Leave the rest as is.
 
-## Сигналы
+## Signals
 
 ### Long
 ![QQE+HULL strategy long example](./long_example.png)
 * New BLUE histogram appeard
 * HULL must be green and price has to be closed above it.
-* Volume Oscilator must be greater then zero percent.
+* Volume Oscilator must be greater than zero percent.
 
 When all conditions met we open LONG position after TRIGGER candle closed.
 Set Stop Loss below recent swing low and target Take Profit 1.5 the risk.
@@ -50,48 +50,43 @@ Set Stop Loss below recent swing low and target Take Profit 1.5 the risk.
 ![QQE+HULL strategy short example](./short_example.png)
 * New RED histogram appeard
 * HULL must be red and price has to be closed below it.
-* Volume Oscilator must be greater then zero percent.
+* Volume Oscilator must be greater than zero percent.
 
 When all conditions met we open LONG position after TRIGGER candle closed.
 Set Stop Loss below recent swing low and target Take Profit 1.5 the risk.
 
 ## Backtest
-* Ticker: `BTCUSDTPERP`
-* Timeframe: `15m`
-* Duration: `4 months`
+* Ticker: BTCUSDTPERP
+* Timeframe: 15m
+* Duration: 4 months
 
-* Начальный капитал: `1000 USDT`
-* Risk per trade: `1% от аккаунта`
+* Initial capital: 1000 USDT
+* Risk per trade: 1% of account
 * Stop Loss: ATR 14; Multiplier: 3
 * Take Profit Type: Risk/Reward
 * Risk/Reward ratio: 1.5
 
-Первый результаты:
+First result:
 ![QQE+HULL strategy first result trades](./result_1_trades.png)
-![QQE+HULL strategy first result](./result_1.png)
+![QQE+HULL strategy first result trades](./result_1.png)
 
-Давайте попробуем оптимизировать. 
+Let's try to optimize. 
 
-## Оптимизация
+## Optimization
 
-Главный минус данной стратегии, то что она часто открывает сделки против основного тренда. Давайте это исправим c помощью [EMA] и [SuperTrend]. А так же отфильтруем сделки, которые открываеются на низковолатильном рынке с помощью [ADX](https://ru.tradingview.com/script/VTPMMOrx-ADX-and-DI).
+The main drawback of this strategy is that it often opens trades against the main trend. Let's fix it with [EMA] and [SuperTrend]. And also let's filter trades that are opened in low volatility market with <a target="_blank" rel="noopener noreferrer" href="https://ru.tradingview.com/script/VTPMMOrx-ADX-and-DI">ADX</a>.
 
 ![QQE+HULL strategy final result trades](./final-result_1_trades.png)
 ![QQE+HULL strategy equity curve](./result_1_eq.png)
 ![QQE+HULL strategy summary](./result_1_overview.png)
 
-Дополнительные фильтры:
-* `ADX > 15`
-* Цена закрытия выше чем EMA 200
-* Зеленый SuperTrend
-Я решил добавить этот индикатор, потому что у фильтрации по EMA 200 был один минус. Мы получали ложные сигналы во время бокового движения цены. После добавления SuperTrend количество проигрышных сигналов стало меньше, а количество выигрышных практически не изменилось.
+Additional filters:
+* ADX > 15
+* Close price is higher than EMA 200
+* Green SuperTrend (Period:14; Factor: 5;)  
+I decided to add this indicator because the EMA 200 filtering had one downside. We were getting false signals during sideways price movements. After adding SuperTrend the number of losing signals became less, while the number of winning signals remained almost unchanged.
 
-Измененные параметры:
-* R/R: 1:3
-Мы увеличим параметр Risk/Reward и разделим Take Profit на две части. Первую часть будем забирать на соотношении 1:1, вторую на 1:3
-После взятия первого TP перемещаем Stop Loss в безубыток.
+## Conclusion
 
-## Итог
-
-Как мы видим в результате оптимизации удалось повысить превратить убыточную стратегию в прибыльную, winrate повысился на 16% c 36.7% до 51%.
-
+Initially the strategy was not as profitable as the author promised but as we can see the optimization has improved the profitability of the strategy and increased the winrate by 16% from 36.7% to 51%. 
+Next time we will backtest the strategy based on PSAR and RSI.
