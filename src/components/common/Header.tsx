@@ -26,7 +26,7 @@ const Header: React.FC<EmptyProps> = () => {
               <MenuIcon className="h-6 w-6" aria-hidden="true" />
             </Popover.Button>
           </div>
-          <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 space-x-8">
+          {/* <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 space-x-8">
             {resources.map(item => (
               <Link
                 to="/"
@@ -36,7 +36,7 @@ const Header: React.FC<EmptyProps> = () => {
                 {item}
               </Link>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
 

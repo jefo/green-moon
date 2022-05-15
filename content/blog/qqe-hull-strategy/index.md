@@ -1,7 +1,8 @@
 ---
 title: Becktest QQE+HULL Strategy v. 1.0.0
 date: "2022-05-15T22:12:03.284Z"
-description: "QQE+HULL strategy backtest on different pairs"
+tags: Tradingview, Backtest, Pinescript 
+description: "QQE+HULL strategy backtest"
 ---
 
 This is my first post on my new blog! How exciting!

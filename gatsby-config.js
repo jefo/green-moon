@@ -1,9 +1,9 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Blog Starter`,
+    title: `Johnny Jefo Backtests`,
     author: {
-      name: `Kyle Mathews`,
-      summary: `who lives and works in San Francisco building useful things.`,
+      name: `Johnny Jefo`,
+      summary: `Im backtesting strategies and create trading bots.`,
     },
     description: `A starter blog demonstrating what Gatsby can do.`,
     siteUrl: `https://gatsbystarterblogsource.gatsbyjs.io/`,
@@ -118,7 +118,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `A blog by Sridatta`,
+        name: `A backtesting blog by Johnny Jefo`,
         short_name: `GatsbyJS`,
         start_url: `/`,
         background_color: `#ffffff`,

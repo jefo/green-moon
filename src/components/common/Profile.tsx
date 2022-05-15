@@ -44,7 +44,7 @@ const Bio: React.FC<EmptyProps> = () => {
         />
         <div>
           <h3 className="font-bold font-exo tracking-wide">{author.name}</h3>
-          <div className="pt-2 flex space-x-4">
+          {/* <div className="pt-2 flex space-x-4">
             <Button
               label="Twitter"
               href={`https://twitter.com/${social.twitter || ""}`}
@@ -63,7 +63,7 @@ const Bio: React.FC<EmptyProps> = () => {
             >
               <Github className="w-5 h-5 fill-current" />
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
       <p className="mt-5 font-yrsa text-lg text-skin-fg">{author.summary}</p>
