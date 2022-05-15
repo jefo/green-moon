@@ -18,301 +18,80 @@ I found this strategy at TradeIQ channel.
 
 ## Indicators
 * [QQE MOD](https://www.tradingview.com/script/TpUW4muw-QQE-MOD/)
->The Qualitative Quantitative Estimation (QQE) indicator works like a smoother version of the popular Relative Strength Index (RSI) indicator. QQE expands on RSI by adding two volatility based trailing stop lines. These trailing stop lines are composed of a fast and a slow moving Average True Range (ATR).
+First confirmation indicator.
 
 * [HULL SUITE](https://www.tradingview.com/v/hg92pFwS/)
->Hull is its extremely responsive and smooth moving average created by Alan Hull in 2005.
-Minimal lag and smooth curves made HMA extremely popular TA tool.
+Second confirmation indicator.
 
 * [Volume Oscilator]
->Осциллятор объема — индикатор, показывающий разность между двумя скользящими средними объема торгов.
+Volume indicator to confirm volume increase.
+
+* [ATR Bands](https://ru.tradingview.com/script/ziTzsSfo-ATR-Bands/)
+Используется для определения уровня Stop Loss
 
 ## Настройки индикаторов
-* QQE MOD (По умолчанию)
 * HULL SUITE
-Length: 60
-* Volume Oscilator (По умолчанию)
+Меняем Length на 60
 
-## Rules
-Сигналы для входа:
-* long: гистограмма QQE изменила цвет на синий
-* short: гистограмма QQE изменила цвет на красный
+Остальное оставляем как есть.
 
-Фильтры:
-* long: Hull MA имеет цвет зеленый
-* short: Hull MA имеет цвет красный
-
-* long: Volume Osculator > 0
-* short: Volume Osculator > 0
-
-Фильтр применяется после сигнала для того что бы улучшить его качество. Для того что бы сигнал считался валидным, все фильтры должны проходить.
-
-## Примеры входов
+## Сигналы
 
 ### Long
-![BTCUSDTPERP](./long_example.png)
-1) QQE MOD начал рисовать синюю гистограмму
-2) HULL имеет цвет зеленый
-3) Volume Oscilator показывает объем больше 0%
+![QQE+HULL strategy long example](./long_example.png)
+* New BLUE histogram appeard
+* HULL must be green and price has to be closed above it.
+* Volume Oscilator must be greater then zero percent.
 
-Открывем сделку после закрытия trigger свечи со stop loss по уровню ATR(14) * 3 (0.85%) и Take Profit x1.5 (1.28%)
-
-Сигнал получился довольно неплохой.
+When all conditions met we open LONG position after TRIGGER candle closed.
+Set Stop Loss below recent swing low and target Take Profit 1.5 the risk.
 
 ### Short
-![BTCUSDTPERP](./short_example.png)
-1) QQE MOD начал рисовать синюю гистограмму
-2) HULL имеет цвет зеленый
-3) Volume Oscilator показывает объем больше 0%
+![QQE+HULL strategy short example](./short_example.png)
+* New RED histogram appeard
+* HULL must be red and price has to be closed below it.
+* Volume Oscilator must be greater then zero percent.
 
-Открывем сделку после закрытия trigger свечи со stop loss по уровню ATR(14) * 3 (1.48%) и Take Profit x1.5 (2.21%)
-
-Сигнал получился не очень хороший. Мы получили его фактически на ретесте ближайшего уровня поддержки, после чего было небольшое коррекционное движение, которое могло закончиться не в нашу пользу. Во-вторых из-за того что Stop Loss был высоко, TP пришлось ставить ниже уровня поддержки. Если бы мы его не пробили, сделка закрылась бы в минус. При реальной торговли я бы не стал открывать данную сделку.
-
-### Плохой сигнал 
-![BTCUSDTPERP](./no_entry_example.png)
-
-Почему данный сигнал не считается корректным?
-
-1) QQE MOD сменил цвет на синий - ОК (emoji)
-2) HULL на данной свечке имеет красный цвет. Меняется на зеленый он только на следущей - Не ОК. [emoji]
-3) Volume Oscilator незначительно превышает 0% - Не ОК. [emoji]
+When all conditions met we open LONG position after TRIGGER candle closed.
+Set Stop Loss below recent swing low and target Take Profit 1.5 the risk.
 
 ## Backtest
-* Ticker: BTCUSDTPERP
-* Timeframe: 15m
-* Duration: 4 months
+* Ticker: `BTCUSDTPERP`
+* Timeframe: `15m`
+* Duration: `4 months`
 
-* Начальный капитал: 1000 USDT
-* Risk per trade: 1% от аккаунта
-* Stop Loss: ATR(14); ATR Multiplier: 3
+* Начальный капитал: `1000 USDT`
+* Risk per trade: `1% от аккаунта`
+* Stop Loss: ATR 14; Multiplier: 3
 * Take Profit Type: Risk/Reward
 * Risk/Reward ratio: 1.5
 
 Первый результаты:
-![BTCUSDTPERP](./result_1.png)
-![BTCUSDTPERP](./result_1_overview.png)
+![QQE+HULL strategy first result trades](./result_1_trades.png)
+![QQE+HULL strategy first result](./result_1.png)
 
-С учетом того, что сратегия не слила депозит, можно считать для нее еще не все потеряно. Попробуем оптимизировать.
+Давайте попробуем оптимизировать. 
 
 ## Оптимизация
 
+Главный минус данной стратегии, то что она часто открывает сделки против основного тренда. Давайте это исправим c помощью [EMA] и [SuperTrend]. А так же отфильтруем сделки, которые открываеются на низковолатильном рынке с помощью [ADX](https://ru.tradingview.com/script/VTPMMOrx-ADX-and-DI).
+
+![QQE+HULL strategy final result trades](./final-result_1_trades.png)
+![QQE+HULL strategy equity curve](./result_1_eq.png)
+![QQE+HULL strategy summary](./result_1_overview.png)
+
 Дополнительные фильтры:
-* ADX > 11 (ссылка)
-* Цена закрытия выше чем ema(200) (ссылка на EMA)
-* ATR Multiplier: 2.45
-* Risk/Reward: x1.6
-* Отключен volume oscilator
-* Максимальный Stop Loss 6000 пунктов
+* `ADX > 15`
+* Цена закрытия выше чем EMA 200
+* Зеленый SuperTrend
+Я решил добавить этот индикатор, потому что у фильтрации по EMA 200 был один минус. Мы получали ложные сигналы во время бокового движения цены. После добавления SuperTrend количество проигрышных сигналов стало меньше, а количество выигрышных практически не изменилось.
 
-![BTCUSDTPERP](./result_1_eq.png)
-![BTCUSDTPERP](./result_1_overview.png)
+Измененные параметры:
+* R/R: 1:3
+Мы увеличим параметр Risk/Reward и разделим Take Profit на две части. Первую часть будем забирать на соотношении 1:1, вторую на 1:3
+После взятия первого TP перемещаем Stop Loss в безубыток.
 
-Как мы видим оптимизаци значительно повысила Profit Factor. Очень большое значение сыграл фильтр по Stop Loss. Из за ATR тот иногда был непомерно большим, что приводило к тому, что Take Profit был тоже огромный. Мы избавились от подобных сделок. Так же мы отфильтовали сигналы по тренду, что позволило получить WINRATE 66%, что очень и очень хорошо.
+## Итог
 
-```js
-const saltyDuckEgg = "chinese preserved food product"
-```
+Как мы видим в результате оптимизации удалось повысить превратить убыточную стратегию в прибыльную, winrate повысился на 16% c 36.7% до 51%.
 
-| Number | Title                                    | Year |
-| :----- | :--------------------------------------- | ---: |
-| 1      | Harry Potter and the Philosopher’s Stone | 2001 |
-| 2      | Harry Potter and the Chamber of Secrets  | 2002 |
-| 3      | Harry Potter and the Prisoner of Azkaban | 2004 |
-
-[View raw (TEST.md)](https://raw.github.com/adamschwartz/github-markdown-kitchen-sink/master/README.md)
-
-This is a paragraph.
-
-    This is a paragraph.
-
-# Header 1
-
-## Header 2
-
-    Header 1
-    ========
-
-    Header 2
-    --------
-
-# Header 1
-
-## Header 2
-
-### Header 3
-
-#### Header 4
-
-##### Header 5
-
-###### Header 6
-
-    # Header 1
-    ## Header 2
-    ### Header 3
-    #### Header 4
-    ##### Header 5
-    ###### Header 6
-
-# Header 1
-
-## Header 2
-
-### Header 3
-
-#### Header 4
-
-##### Header 5
-
-###### Header 6
-
-    # Header 1 #
-    ## Header 2 ##
-    ### Header 3 ###
-    #### Header 4 ####
-    ##### Header 5 #####
-    ###### Header 6 ######
-
-> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.
-
-    > Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.
-
-> ## This is a header.
->
-> 1. This is the first list item.
-> 2. This is the second list item.
->
-> Here's some example code:
->
->     Markdown.generate();
-
-    > ## This is a header.
-    > 1. This is the first list item.
-    > 2. This is the second list item.
-    >
-    > Here's some example code:
-    >
-    >     Markdown.generate();
-
-- Red
-- Green
-- Blue
-
-* Red
-* Green
-* Blue
-
-- Red
-- Green
-- Blue
-
-```markdown
-- Red
-- Green
-- Blue
-
-* Red
-* Green
-* Blue
-
-- Red
-- Green
-- Blue
-```
-
-- `code goes` here in this line
-- **bold** goes here
-
-```markdown
-- `code goes` here in this line
-- **bold** goes here
-```
-
-1. Buy flour and salt
-1. Mix together with water
-1. Bake
-
-```markdown
-1. Buy flour and salt
-1. Mix together with water
-1. Bake
-```
-
-1. `code goes` here in this line
-1. **bold** goes here
-
-```markdown
-1. `code goes` here in this line
-1. **bold** goes here
-```
-
-Paragraph:
-
-    Code
-
-<!-- -->
-
-    Paragraph:
-
-        Code
-
----
-
----
-
----
-
----
-
----
-
-    * * *
-
-    ***
-
-    *****
-
-    - - -
-
-    ---------------------------------------
-
-This is [an example](http://example.com "Example") link.
-
-[This link](http://example.com) has no title attr.
-
-This is [an example][id] reference-style link.
-
-[id]: http://example.com "Optional Title"
-
-    This is [an example](http://example.com "Example") link.
-
-    [This link](http://example.com) has no title attr.
-
-    This is [an example] [id] reference-style link.
-
-    [id]: http://example.com "Optional Title"
-
-_single asterisks_
-
-_single underscores_
-
-**double asterisks**
-
-**double underscores**
-
-    *single asterisks*
-
-    _single underscores_
-
-    **double asterisks**
-
-    __double underscores__
-
-This paragraph has some `code` in it.
-
-    This paragraph has some `code` in it.
-
-![Alt Text](https://placehold.it/200x50 "Image Title")
-
-    ![Alt Text](https://placehold.it/200x50 "Image Title")
